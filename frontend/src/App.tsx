@@ -4,6 +4,9 @@ import { backendSocketUri } from './lib/api';
 
 import { UserList } from './components/UserList';
 import { ChatWindow } from './components/ChatWindow';
+// import { useStateDispatch } from './hooks';
+// import { useEffect } from 'react';
+// import { getAllNames, getFemaleNames, getMaleNames } from './services';
 
 const socket = io(backendSocketUri);
 
@@ -12,6 +15,12 @@ socket.on('connect', () => {
 });
 
 export const App = () => {
+  // const dispatch = useStateDispatch();
+
+  // useEffect(() => {
+  //   dispatch(getAllNames());
+  // }, [dispatch]);
+
   return (
     <div className='flex h-screen'>
       <UserList />
