@@ -1,7 +1,23 @@
+import { useEffect } from 'react';
+import { useStateDispatch, useStateSelector } from '../hooks';
+import { getUsersInChat } from '../services';
+
 export const UserList = () => {
+  const { chatters } = useStateSelector((state) => state.users);
+
+  const dispatch = useStateDispatch();
+
+  useEffect(() => {
+    dispatch(getUsersInChat());
+  }, [dispatch]);
+
   return (
     <aside className='w-1/4 max-w-xs border-r-2 border-secondary p-4'>
-      <ul className='w-full h-full'></ul>
+      <ul className='w-full h-full'>
+        {chatters.map((chatter: { _id: string; name: string }) => (
+          <li key={chatter._id}>{chatter.name}</li>
+        ))}
+      </ul>
     </aside>
   );
 };

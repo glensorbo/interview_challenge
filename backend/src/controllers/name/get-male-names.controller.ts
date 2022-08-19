@@ -1,17 +1,15 @@
 import { RequestHandler } from 'express';
-
 import { NameRepository } from '../../repositories';
+import { InternalServerErrorException } from './../../exceptions/internal-server-error.exception';
 
-import { InternalServerErrorException } from './../../exceptions';
-
-export const getAllNames: RequestHandler = async (req, res, next) => {
+export const getMaleNames: RequestHandler = async (req, res, next) => {
   try {
     //* Ask DB for names if lastYearInList === (new Date().getFullYear() -1)
     //* If lastYearInList === (new Date().getFullYear() -2) fetch new list from SSB and pray to god they haven't restructured the list
 
-    const names = await NameRepository.findOne('kombined');
+    const { maleNames } = await NameRepository.findOne();
 
-    res.json({ first_name: names!.first_name, last_name: names!.last_name });
+    res.json({ maleNames });
   } catch (error) {
     next(new InternalServerErrorException());
   }

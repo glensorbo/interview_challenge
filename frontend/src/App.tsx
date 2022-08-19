@@ -1,33 +1,76 @@
+import { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
+
+import { useStateDispatch, useStateSelector } from './hooks';
+import { getAllNames } from './services';
 
 import { backendSocketUri } from './lib/api';
 
 import { UserList } from './components/UserList';
 import { ChatWindow } from './components/ChatWindow';
-// import { useStateDispatch } from './hooks';
-// import { useEffect } from 'react';
-// import { getAllNames, getFemaleNames, getMaleNames } from './services';
-
-const socket = io(backendSocketUri);
-
-socket.on('connect', () => {
-  console.log("We've opened a websocket connection with id: ", socket.id);
-});
+import { Overlay } from './components/Overlay';
+import { Modal } from './components/Modal';
+import { ChatIdentity } from './components/ChatIdentity';
+import { ChatInput } from './components/ChatInput';
+import { getChatHistory } from './services/get-chat-history';
 
 export const App = () => {
-  // const dispatch = useStateDispatch();
+  const [name, setName] = useState<string | null>(null);
 
-  // useEffect(() => {
-  //   dispatch(getAllNames());
-  // }, [dispatch]);
+  const { loading } = useStateSelector((state) => state.names);
+
+  const nameChangeHandler = (firstName: string, lastName: string) => {
+    const socket = io(backendSocketUri, {
+      auth: { name: `${firstName} ${lastName}` },
+    });
+
+    socket.on('connect', () => {
+      console.log("We've opened a websocket connection with id: ", socket.id);
+      console.log(`And your name is: ${firstName} ${lastName}`);
+      // socket.emit('chat', {
+      //   room: 'common',
+      //   name: `${firstName} ${lastName}`,
+      //   message: 'a message',
+      //   time: new Date(),
+      // });
+      setName(`${firstName} ${lastName}`);
+      socket.on('common-chat', (chat) => {
+        console.log(chat);
+      });
+    });
+  };
+
+  const dispatch = useStateDispatch();
+
+  useEffect(() => {
+    dispatch(getAllNames());
+    dispatch(getChatHistory());
+  }, [dispatch]);
+
+  const onSubmitHandler = (
+    e: React.ChangeEvent<HTMLFormElement>,
+    text: string
+  ) => {
+    e.preventDefault();
+    console.log(text);
+  };
 
   return (
     <div className='flex h-screen'>
       <UserList />
       <main className='w-full'>
         <section className='flex flex-col w-full h-full p-4'>
+          {!name && (
+            <Overlay>
+              <Modal>
+                {!loading && (
+                  <ChatIdentity nameChangeHandler={nameChangeHandler} />
+                )}
+              </Modal>
+            </Overlay>
+          )}
           <ChatWindow />
-          <div className='w-full bg-primary text-white p-6 text-lg'>asdasd</div>
+          <ChatInput onSubmitHandler={onSubmitHandler} />
         </section>
       </main>
     </div>

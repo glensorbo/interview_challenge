@@ -15,4 +15,4 @@ const nameSchema = new mongoose.Schema<IName>(
   }
 );
 
-export const NameModel = mongoose.model<IName>('Name', nameSchema);
+export const Name = mongoose.model<IName>('Name', nameSchema);

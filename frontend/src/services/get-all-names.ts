@@ -6,7 +6,11 @@ export const getAllNames = () => {
   return async (dispatch: AppDispatch) => {
     try {
       const { data } = await API.get('/name');
-      dispatch(nameActions.loadAllNames(data));
+      dispatch(nameActions.loadFemaleNames(data.femaleNames));
+      dispatch(nameActions.loadMaleNames(data.maleNames));
+      setTimeout(() => {
+        dispatch(nameActions.setLoading(false));
+      }, 2000);
     } catch (error) {
       console.error(error);
     }
