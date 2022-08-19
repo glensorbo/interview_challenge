@@ -1,9 +1,9 @@
 import express from 'express';
 
-import { getCommonchat } from '../controllers/chat';
+import { getPublicChat } from '../controllers/chat';
 
 const router = express.Router();
 
-router.get('/', getCommonchat);
+router.get('/', getPublicChat);
 
 export { router as ChatRoutes };

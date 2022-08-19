@@ -5,6 +5,6 @@ export interface IChat {
   room: string;
   name: string;
   message: string;
-  user?: Types.ObjectId;
+  avatar: string;
   time: Date;
 }

@@ -3,11 +3,12 @@ import { ChatRepository } from '../../repositories';
 
 import { InternalServerErrorException } from './../../exceptions';
 
-export const getCommonchat: RequestHandler = async (req, res, next) => {
+export const getPublicChat: RequestHandler = async (req, res, next) => {
   try {
-    const commonChat = await ChatRepository.getCommonChat();
+    const publicChat = await ChatRepository.getPublicChat();
 
-    res.json(commonChat);
+    console.log(publicChat);
+    res.json(publicChat);
   } catch (error) {
     next(new InternalServerErrorException());
   }

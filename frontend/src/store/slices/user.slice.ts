@@ -2,6 +2,10 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   loading: true,
+  current: {
+    name: '',
+    avatar: '',
+  },
   chatters: [] as {
     _id: string;
     name: string;
@@ -20,6 +24,9 @@ export const userSlice = createSlice({
     loadUsers(state, action) {
       state.chatters = action.payload;
     },
+    setCurrentUser(state, action: { payload: { name: string; avatar: string } }) {
+      state.current = action.payload;
+    },
     addUser(
       state,
       action: {
@@ -34,6 +41,9 @@ export const userSlice = createSlice({
       const newList = [...state.chatters];
       newList.push(action.payload);
       state.chatters = newList;
+    },
+    removeUser(state, action) {
+      state.chatters = state.chatters.filter((user) => user.socket_id !== action.payload);
     },
   },
 });

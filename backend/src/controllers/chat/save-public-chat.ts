@@ -1,9 +1,9 @@
 import { IChat } from './../../types/interfaces/models/IChat.interface';
 import { ChatRepository } from '../../repositories';
 
-export const saveCommonchat = async (chat: IChat, cb: (res: any) => void) => {
+export const savePublicChat = async (chat: IChat, cb: (res: any) => void) => {
   try {
-    const newChatMessage = await ChatRepository.saveNewCommonChat(chat);
+    const newChatMessage = await ChatRepository.saveNewPublicChat(chat);
 
     cb(newChatMessage);
   } catch (error) {

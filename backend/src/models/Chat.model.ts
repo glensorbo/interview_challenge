@@ -7,7 +7,7 @@ const chatSchema = new mongoose.Schema<IChat>(
     room: { type: String, required: true, trim: true },
     name: { type: String, required: true, trim: true },
     message: { type: String, required: true, trim: true },
-    user: { type: mongoose.Types.ObjectId, ref: 'User' },
+    avatar: { type: String, required: true, trim: true },
     time: { type: Date, required: true },
   },
   {

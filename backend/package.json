@@ -4,8 +4,9 @@
   "description": "Interview challenge backend",
   "main": "./build/index.js",
   "scripts": {
-    "start": "node ./build/index.js",
-    "start:dev": "nodemon ./build/index.js"
+    "start": "node build/index.js",
+    "start:dev": "nodemon ./build/index.js",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "glen.sorbo@bouvet.no",
