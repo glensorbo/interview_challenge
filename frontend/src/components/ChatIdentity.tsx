@@ -2,7 +2,11 @@ import { useRandomName } from '../hooks/useRandomName';
 
 type Props = {
   children?: React.ReactNode;
-  nameChangeHandler: (firstName: string, lastName: string) => void;
+  nameChangeHandler: (
+    firstName: string,
+    lastName: string,
+    avatar: string
+  ) => void;
 };
 
 export const ChatIdentity = (props: Props) => {
@@ -10,7 +14,7 @@ export const ChatIdentity = (props: Props) => {
 
   return (
     <>
-      <div className='flex items-center'>
+      <div className='flex items-center min-h-fit'>
         <img
           src='https://avatars.dicebear.com/api/bottts/Bouvet.svg'
           alt='Avatar'
@@ -34,7 +38,7 @@ export const ChatIdentity = (props: Props) => {
       <img
         src={`https://avatars.dicebear.com/api/${sex}/${firstName}${lastName}.svg`}
         alt={firstName + ' ' + lastName}
-        className='h-56 mt-10'
+        className='h-56 my-10'
       />
       <div className='w-full flex items-center justify-around mt-auto'>
         <button
@@ -45,7 +49,13 @@ export const ChatIdentity = (props: Props) => {
         </button>
         <button
           className='py-3 px-4 bg-primary text-white font-semibold tracking-wide'
-          onClick={() => props.nameChangeHandler(firstName, lastName)}
+          onClick={() =>
+            props.nameChangeHandler(
+              firstName,
+              lastName,
+              `https://avatars.dicebear.com/api/${sex}/${firstName}${lastName}.svg`
+            )
+          }
         >
           Kult navn, ta meg til chatten!
         </button>

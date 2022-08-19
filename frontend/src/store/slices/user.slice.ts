@@ -2,7 +2,12 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   loading: true,
-  chatters: [] as { _id: string; name: string; socket_id: string }[],
+  chatters: [] as {
+    _id: string;
+    name: string;
+    socket_id: string;
+    avatar: string;
+  }[],
 };
 
 export const userSlice = createSlice({
@@ -17,7 +22,14 @@ export const userSlice = createSlice({
     },
     addUser(
       state,
-      action: { payload: { _id: string; name: string; socket_id: string } }
+      action: {
+        payload: {
+          _id: string;
+          name: string;
+          socket_id: string;
+          avatar: string;
+        };
+      }
     ) {
       const newList = [...state.chatters];
       newList.push(action.payload);

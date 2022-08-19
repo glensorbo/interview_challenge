@@ -4,11 +4,16 @@ export const getAll = async () => {
   return await User.find();
 };
 
-export const save = async (user: { name: string; socket_id: string }) => {
+export const save = async (user: {
+  name: string;
+  socket_id: string;
+  avatar: string;
+}) => {
   const newChatter = new User(user);
   return newChatter.save();
 };
 
 export const deleteUser = async (socket_id: string) => {
+  // await User.findOneAndDelete({ name: 'Madelen Kingadottir' });
   return await User.deleteOne({ socket_id });
 };

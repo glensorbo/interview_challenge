@@ -14,9 +14,18 @@ export const UserList = () => {
   return (
     <aside className='w-1/4 max-w-xs border-r-2 border-secondary p-4'>
       <ul className='w-full h-full'>
-        {chatters.map((chatter: { _id: string; name: string }) => (
-          <li key={chatter._id}>{chatter.name}</li>
-        ))}
+        {chatters.map(
+          (chatter: { _id: string; name: string; avatar: string }) => (
+            <li key={chatter._id} className='flex'>
+              <img
+                src={chatter.avatar}
+                alt={chatter.name}
+                className='w-5 h-5'
+              />
+              {chatter.name}
+            </li>
+          )
+        )}
       </ul>
     </aside>
   );

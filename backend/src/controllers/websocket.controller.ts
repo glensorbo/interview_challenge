@@ -21,20 +21,30 @@ export const websocketController = (server: any) => {
   io.use((socket, next) => {
     //@ts-ignore
     socket.username = socket.handshake.auth.name;
+    //@ts-ignore
+    socket.avatar = socket.handshake.auth.avatar;
     next();
   });
 
-  io.on('connection', (socket) => {
+  io.on('connection', async (socket) => {
     //@ts-ignore
     console.log('New websocket connection', socket.id, socket.username);
-    //@ts-ignore
-    UserRepository.save({ name: socket.username, socket_id: socket.id });
-
-    //@ts-ignore
-    socket.broadcast.emit('new-chatter', {
+    const user = await UserRepository.save({
       //@ts-ignore
       name: socket.username,
       socket_id: socket.id,
+      //@ts-ignore
+      avatar: socket.avatar,
+    });
+
+    //@ts-ignore
+    io.emit('new-chatter', {
+      _id: user._id,
+      //@ts-ignore
+      name: socket.username,
+      socket_id: socket.id,
+      //@ts-ignore
+      avatar: socket.avatar,
     });
 
     socket.on(
@@ -48,10 +58,10 @@ export const websocketController = (server: any) => {
       }
     );
 
-    socket.on('disconnect', (reason) => {
+    socket.on('disconnect', async (reason) => {
       console.log(reason);
       console.log(socket.id);
-      UserRepository.deleteUser(socket.id);
+      await UserRepository.deleteUser(socket.id);
     });
   });
 };

@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 
 import { useStateDispatch, useStateSelector } from './hooks';
-import { getAllNames } from './services';
+import { getAllNames, getChatHistory } from './services';
+
+import { userActions } from './store/slices/user.slice';
 
 import { backendSocketUri } from './lib/api';
 
@@ -12,35 +14,42 @@ import { Overlay } from './components/Overlay';
 import { Modal } from './components/Modal';
 import { ChatIdentity } from './components/ChatIdentity';
 import { ChatInput } from './components/ChatInput';
-import { getChatHistory } from './services/get-chat-history';
 
 export const App = () => {
   const [name, setName] = useState<string | null>(null);
 
   const { loading } = useStateSelector((state) => state.names);
 
-  const nameChangeHandler = (firstName: string, lastName: string) => {
+  const dispatch = useStateDispatch();
+
+  const nameChangeHandler = (
+    firstName: string,
+    lastName: string,
+    avatar: string
+  ) => {
     const socket = io(backendSocketUri, {
-      auth: { name: `${firstName} ${lastName}` },
+      auth: { name: `${firstName} ${lastName}`, avatar },
     });
 
     socket.on('connect', () => {
       console.log("We've opened a websocket connection with id: ", socket.id);
       console.log(`And your name is: ${firstName} ${lastName}`);
-      // socket.emit('chat', {
-      //   room: 'common',
-      //   name: `${firstName} ${lastName}`,
-      //   message: 'a message',
-      //   time: new Date(),
-      // });
+      socket.emit('chat', {
+        room: 'common',
+        name: `${firstName} ${lastName}`,
+        message: 'a message',
+        avatar,
+        time: new Date(),
+      });
       setName(`${firstName} ${lastName}`);
       socket.on('common-chat', (chat) => {
         console.log(chat);
       });
+      socket.on('new-chatter', ({ _id, name, socket_id, avatar }) => {
+        dispatch(userActions.addUser({ _id, name, socket_id, avatar }));
+      });
     });
   };
-
-  const dispatch = useStateDispatch();
 
   useEffect(() => {
     dispatch(getAllNames());
