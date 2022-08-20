@@ -1,33 +1,78 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useStateSelector } from '../hooks';
+
+import { DebounceInput } from 'react-debounce-input';
+
+import { websocket } from '../lib/socket';
 
 type Props = {
   children?: React.ReactNode;
-  onSubmitHandler: (e: React.ChangeEvent<HTMLFormElement>, text: string) => void;
+  setHasBeenActive: (a: boolean) => void;
 };
 
 export const ChatInput = (props: Props) => {
   const [text, setText] = useState('');
+  const [sentChat, setSentChat] = useState(false);
+
+  const { current } = useStateSelector((state) => state.users);
+
+  const socket = websocket.getInstance();
+
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout>;
+    let afkTimer: ReturnType<typeof setTimeout>;
+
+    timer = setTimeout(
+      () => {
+        socket?.emit('status-update', current.socketId, 'Idle');
+      },
+      sentChat ? 5000 : 30000
+    );
+
+    afkTimer = setTimeout(() => {
+      socket?.emit('status-update', current.socketId, 'AFK');
+    }, 300000);
+
+    return () => {
+      clearTimeout(timer);
+      clearTimeout(afkTimer);
+    };
+  }, [text, socket, current, sentChat]);
 
   const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
+    const socket = websocket.getInstance();
+    socket?.emit('status-update', current.socketId, 'Typing');
     setText(e.target.value);
   };
 
+  const onSubmitHandler = (e: React.ChangeEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setText('');
+    setSentChat(true);
+
+    const socket = websocket.getInstance();
+
+    props.setHasBeenActive(true);
+    socket?.emit('chat', {
+      room: 'public',
+      name: current.name,
+      message: text,
+      avatar: current.avatar,
+      time: new Date(),
+    });
+  };
+
   return (
-    <form
-      onSubmit={(e: React.ChangeEvent<HTMLFormElement>) => {
-        props.onSubmitHandler(e, text);
-        setText('');
-      }}
-      className='relative'
-    >
-      <input
+    <form onSubmit={onSubmitHandler} className='relative'>
+      <DebounceInput
         type='text'
         autoFocus={true}
         value={text}
-        onChange={onChangeHandler}
+        onChange={(e) => onChangeHandler(e)}
+        debounceTimeout={500}
         placeholder='Skriv melding her'
-        className='w-full bg-primary text-white p-6 text-lg rounded focus:outline-none pr-28'
+        className='w-full bg-primary text-white p-3 text-lg rounded focus:outline-none pr-28'
       />
       <button
         type='submit'

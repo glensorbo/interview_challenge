@@ -9,7 +9,7 @@ export const websocketController = (server: any) => {
     server,
     {
       cors: {
-        origin: '*',
+        origin: ['http://localhost:3000', 'https://bouvet-rtc.glensorbo.com'],
       },
     }
   );
@@ -37,14 +37,17 @@ export const websocketController = (server: any) => {
       avatar: socket.avatar,
     });
 
+    const users = await UserRepository.getAll();
+
     //@ts-ignore
-    socket.broadcast.emit('new-chatter', {
-      _id: user._id,
+    io.emit('new-chatter', users);
+
+    //@ts-ignore
+    socket.on('status-update', async (socket_id: string, status: string) => {
+      await UserRepository.updateUserStatus(socket_id, status);
+      const users = await UserRepository.getAll();
       //@ts-ignore
-      name: socket.username,
-      socket_id: socket.id,
-      //@ts-ignore
-      avatar: user.avatar,
+      io.emit('update-userlist', users);
     });
 
     socket.on(

@@ -1,14 +1,36 @@
+import { useEffect, useRef } from 'react';
 import { useStateSelector } from '../hooks';
 
 export const ChatWindow = () => {
   const { messages } = useStateSelector((state) => state.chat);
 
-  const reduced = messages.slice(messages.length - 10, messages.length);
+  let reduced;
+
+  if (messages.length > 10) {
+    reduced = messages.slice(messages.length - 10, messages.length);
+  } else {
+    reduced = messages;
+  }
 
   const { current } = useStateSelector((state) => state.users);
 
+  const chatList = useRef(null);
+
+  useEffect(() => {
+    if (chatList) {
+      //@ts-ignore
+      chatList.current.addEventListener('DOMNodeInserted', (event) => {
+        const { currentTarget: target } = event;
+        target.scroll({ top: target.scrollHeight, behavior: 'smooth' });
+      });
+    }
+  }, []);
+
   return (
-    <ul className='w-full h-full overflow-y-scroll scrollbar scrollbar-thumb-secondary scrollbar-track-primary'>
+    <ul
+      className='w-full h-full overflow-y-scroll scrollbar scrollbar-thumb-secondary scrollbar-track-primary border-2 border-secondary mb-4 p-4'
+      ref={chatList}
+    >
       {reduced.map((message: { _id: string; message: string; name: string; avatar: string }) => (
         <li
           key={message._id}

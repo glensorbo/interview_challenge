@@ -9,9 +9,6 @@ export const getUsersInChat = () => {
     try {
       const { data } = await API.get('/user');
       dispatch(userActions.loadUsers(data));
-      setTimeout(() => {
-        dispatch(userActions.setLoading(false));
-      }, 2000);
     } catch (error) {
       console.error(error);
     }
