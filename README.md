@@ -10,6 +10,7 @@
 - If user is happy with their generated name they should be able to continue to chatwindow
 
 - Chatwindow is public for everyone who access the site
+- Chatwindow should show last 10 messages
 - Username should be displayed in front of their message
 - Under chatwindow there should be an input to write messages
 
