@@ -75,7 +75,7 @@ export const ChatInput = (props: Props) => {
         autoFocus={true}
         value={text}
         onChange={(e) => onChangeHandler(e)}
-        debounceTimeout={500}
+        debounceTimeout={200}
         placeholder='Skriv melding her'
         className='w-full bg-primary text-white p-3 text-lg rounded focus:outline-none pr-28'
       />
