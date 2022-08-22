@@ -9,3 +9,7 @@ export const saveNewPublicChat = async (chat: IChat) => {
   const newChat = new Chat(chat);
   return await newChat.save();
 };
+
+export const cleanChatMessages = async () => {
+  return await Chat.deleteMany().exec();
+};

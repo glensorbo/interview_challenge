@@ -16,6 +16,7 @@ import { NotFoundException } from './exceptions';
 import { IHttpException } from './types/interfaces';
 
 import { NameRoutes, ChatRoutes, UserRoutes } from './routes';
+import { ChatRepository, UserRepository } from './repositories';
 
 const app = express();
 
@@ -49,6 +50,8 @@ const port = config.PORT || 2022;
 
 const server = app.listen(port, async () => {
   await connectDatabase();
+  await UserRepository.cleanUsersFromDB();
+  await ChatRepository.cleanChatMessages();
 
   websocketController(server);
 

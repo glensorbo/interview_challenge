@@ -3,6 +3,7 @@ import { ChatRepository } from '../../repositories';
 
 export const savePublicChat = async (chat: IChat, cb: (res: any) => void) => {
   try {
+    if (chat.message === '') return;
     const newChatMessage = await ChatRepository.saveNewPublicChat(chat);
 
     cb(newChatMessage);

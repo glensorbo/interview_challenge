@@ -5,14 +5,16 @@ import { IChat } from '../types/interfaces/models';
 import { UserRepository } from '../repositories';
 
 export const websocketController = (server: any) => {
-  const io = new Server<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>(
-    server,
-    {
-      cors: {
-        origin: ['http://localhost:3000', 'https://bouvet-rtc.glensorbo.com'],
-      },
-    }
-  );
+  const io = new Server<
+    ClientToServerEvents,
+    ServerToClientEvents,
+    InterServerEvents,
+    SocketData
+  >(server, {
+    cors: {
+      origin: ['http://localhost:3000', 'https://bouvet-rtc.glensorbo.com'],
+    },
+  });
 
   io.socketsJoin('public');
 
@@ -29,7 +31,7 @@ export const websocketController = (server: any) => {
     //@ts-ignore
     console.log('New websocket connection', socket.id, socket.username);
     //@ts-ignore
-    const user = await UserRepository.save({
+    await UserRepository.save({
       //@ts-ignore
       name: socket.username,
       socket_id: socket.id,
@@ -54,7 +56,8 @@ export const websocketController = (server: any) => {
       //@ts-ignore
       'chat',
       (chat: IChat) => {
-        savePublicChat(chat, (newChatMessage: any) => {
+        savePublicChat(chat, (newChatMessage: IChat) => {
+          if (newChatMessage.message === '') return;
           //@ts-ignore
           io.emit('public-chat', newChatMessage);
         });

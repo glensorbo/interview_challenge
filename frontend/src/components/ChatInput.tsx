@@ -48,6 +48,7 @@ export const ChatInput = (props: Props) => {
 
   const onSubmitHandler = (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (text === '') return;
     setText('');
     setSentChat(true);
 
