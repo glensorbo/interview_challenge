@@ -24,6 +24,9 @@ export const websocketController = (server: any) => {
     //@ts-ignore
     socket.avatar = socket.handshake.auth.avatar;
 
+    //@ts-ignore
+    socket.joined = socket.handshake.auth.time;
+
     next();
   });
 
@@ -37,6 +40,8 @@ export const websocketController = (server: any) => {
       socket_id: socket.id,
       //@ts-ignore
       avatar: socket.avatar,
+      //@ts-ignore
+      joined: socket.joined,
     });
 
     const users = await UserRepository.getAll();

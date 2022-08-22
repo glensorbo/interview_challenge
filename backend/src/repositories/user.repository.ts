@@ -8,6 +8,7 @@ export const save = async (user: {
   name: string;
   socket_id: string;
   avatar: string;
+  joined: string;
 }) => {
   const newChatter = new User(user);
   return newChatter.save();

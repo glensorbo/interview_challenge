@@ -6,6 +6,7 @@ const userSchema = new mongoose.Schema(
     socket_id: { type: String, required: true, trim: true },
     avatar: { type: String, required: true, trim: true },
     status: { type: String, default: 'New arrival', trim: true },
+    joined: { type: String, trim: true },
   },
   {
     versionKey: false,

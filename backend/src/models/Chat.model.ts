@@ -8,7 +8,7 @@ const chatSchema = new mongoose.Schema<IChat>(
     name: { type: String, required: true, trim: true },
     message: { type: String, required: true, trim: true },
     avatar: { type: String, required: true, trim: true },
-    time: { type: Date, required: true },
+    time: { type: String, required: true },
   },
   {
     versionKey: false,

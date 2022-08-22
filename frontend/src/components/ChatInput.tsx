@@ -55,12 +55,16 @@ export const ChatInput = (props: Props) => {
     const socket = websocket.getInstance();
 
     props.setHasBeenActive(true);
+
+    const hours = new Date().getHours();
+    const minutes = new Date().getMinutes();
+
     socket?.emit('chat', {
       room: 'public',
       name: current.name,
       message: text,
       avatar: current.avatar,
-      time: new Date(),
+      time: `${hours}:${minutes}`,
     });
   };
 

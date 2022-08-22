@@ -10,8 +10,11 @@ type Websocket = {
 export const websocket: Websocket = {
   socket: null,
   connect: (firstName: string, lastName: string, avatar: string) => {
+    const hours = new Date().getHours();
+    const minutes = new Date().getMinutes();
+    const time = `${hours}:${minutes}`;
     websocket.socket = io(backendSocketUri, {
-      auth: { name: `${firstName} ${lastName}`, avatar },
+      auth: { name: `${firstName} ${lastName}`, avatar, time },
     });
   },
   getInstance: () => {

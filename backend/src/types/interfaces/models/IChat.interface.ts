@@ -6,5 +6,5 @@ export interface IChat {
   name: string;
   message: string;
   avatar: string;
-  time: Date;
+  time: string;
 }

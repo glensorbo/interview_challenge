@@ -6,6 +6,7 @@ export type Chatter = {
   socket_id: string;
   avatar: string;
   status: string;
+  joined: string;
 };
 
 const initialState = {
@@ -22,6 +23,7 @@ const initialState = {
       socket_id: '',
       avatar: '',
       status: '',
+      joined: '',
     },
   ] as Chatter[],
 };
@@ -36,14 +38,19 @@ export const userSlice = createSlice({
     loadUsers(state, action: { payload: Chatter[] }) {
       state.chatters = action.payload;
     },
-    setCurrentUser(state, action: { payload: { name: string; avatar: string; socketId: string } }) {
+    setCurrentUser(
+      state,
+      action: { payload: { name: string; avatar: string; socketId: string } }
+    ) {
       state.current = action.payload;
     },
     updateUserList(state, action: { payload: Chatter[] }) {
       state.chatters = action.payload;
     },
     removeUser(state, action) {
-      state.chatters = state.chatters.filter((user) => user.socket_id !== action.payload);
+      state.chatters = state.chatters.filter(
+        (user) => user.socket_id !== action.payload
+      );
     },
   },
 });
