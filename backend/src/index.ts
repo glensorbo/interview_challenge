@@ -16,7 +16,6 @@ import { NotFoundException } from './exceptions';
 import { IHttpException } from './types/interfaces';
 
 import { NameRoutes, ChatRoutes, UserRoutes } from './routes';
-import { ChatRepository, UserRepository } from './repositories';
 
 const app = express();
 
@@ -33,23 +32,23 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   throw new NotFoundException();
 });
 
-app.use((error: IHttpException, req: Request, res: Response, next: NextFunction) => {
-  if (res.headersSent) {
-    return next(error);
+app.use(
+  (error: IHttpException, req: Request, res: Response, next: NextFunction) => {
+    if (res.headersSent) {
+      return next(error);
+    }
+    res.status(error.statusCode || 500);
+    res.json({
+      message: error.message || 'Internal Server Error',
+      statusCode: error.statusCode || 500,
+    });
   }
-  res.status(error.statusCode || 500);
-  res.json({
-    message: error.message || 'Internal Server Error',
-    statusCode: error.statusCode || 500,
-  });
-});
+);
 
 const port = config.PORT || 2022;
 
 const server = app.listen(port, async () => {
   await connectDatabase();
-  // await UserRepository.cleanUsersFromDB();
-  // await ChatRepository.cleanChatMessages();
 
   websocketController(server);
 
