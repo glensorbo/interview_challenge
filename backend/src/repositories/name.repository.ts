@@ -40,6 +40,7 @@ export const findOne = async () => {
       last_name: namesFromSSB.names.male.lastName,
       sex: 'male',
     });
+    await maleNames.save();
   }
 
   return { femaleNames, maleNames };
